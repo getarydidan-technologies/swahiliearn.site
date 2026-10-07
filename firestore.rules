@@ -1,0 +1,39 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Connection test document for health checks
+    match /test/connection {
+      allow read: if true;
+    }
+
+    // Helper function to check if the user is authenticated with Firebase Auth
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Helper function to check if the user is accessing their own data
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // User profile and private state
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+
+      // User session history subcollection
+      match /sessions/{sessionId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // User Gemini multi-turn chat threads
+      match /gemini_chats/{chatId} {
+        allow read, write: if isOwner(userId);
+      }
+    }
+
+    // Default deny for all other collections
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

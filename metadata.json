@@ -1,0 +1,6 @@
+{
+  "name": "SWAHILI EARN",
+  "description": "Lipwa kwa kufundisha wazungu kiswahili na ulipwe - Modern conversational learning & chat reward dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,64 @@
+{
+  "entities": {
+    "user": {
+      "title": "User",
+      "description": "Registered SWAHILI EARN user profile and wallet state",
+      "type": "object",
+      "properties": {
+        "full_name": { "type": "string", "description": "Full legal name of the user" },
+        "email": { "type": "string", "description": "Email address of the user" },
+        "phone_number": { "type": "string", "description": "Mobile money phone number" },
+        "balance": { "type": "number", "description": "Available wallet balance in TZS" },
+        "total_earned": { "type": "number", "description": "Cumulative verified earnings in TZS" },
+        "is_activated": { "type": "boolean", "description": "Whether account is activated for withdrawals" },
+        "role": { "type": "string", "enum": ["user", "admin"], "description": "Role of the user" },
+        "created_at": { "type": "string", "description": "ISO timestamp of registration" }
+      },
+      "required": ["full_name", "email", "phone_number"]
+    },
+    "chat_session": {
+      "title": "ChatSession",
+      "description": "Swahili conversational tutoring session record",
+      "type": "object",
+      "properties": {
+        "user_id": { "type": "string", "description": "ID of the user" },
+        "profile_id": { "type": "string", "description": "ID of the partner profile" },
+        "partner_name": { "type": "string", "description": "Name of the learner partner" },
+        "duration_seconds": { "type": "number", "description": "Duration completed in seconds" },
+        "status": { "type": "string", "enum": ["active", "completed", "cancelled"], "description": "Session status" },
+        "reward_tzs": { "type": "number", "description": "Reward credited in TZS" },
+        "created_at": { "type": "string", "description": "Timestamp of session" }
+      },
+      "required": ["user_id", "partner_name", "status"]
+    },
+    "gemini_conversation": {
+      "title": "GeminiConversation",
+      "description": "Multi-turn Gemini chat thread with Search Grounding",
+      "type": "object",
+      "properties": {
+        "user_id": { "type": "string", "description": "User ID" },
+        "title": { "type": "string", "description": "Thread title" },
+        "role_type": { "type": "string", "description": "Chatbot role persona" },
+        "model": { "type": "string", "description": "Gemini model used" },
+        "grounding_enabled": { "type": "boolean", "description": "Whether Google Search Grounding was active" },
+        "messages": { "type": "string", "description": "JSON string of conversation history" },
+        "updated_at": { "type": "string", "description": "ISO timestamp of last activity" }
+      },
+      "required": ["user_id", "model"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "user",
+      "description": "Private user profile and balance state"
+    },
+    "/users/{userId}/sessions/{sessionId}": {
+      "schema": "chat_session",
+      "description": "User chat tutoring session history"
+    },
+    "/users/{userId}/gemini_chats/{chatId}": {
+      "schema": "gemini_conversation",
+      "description": "User Gemini chatbot multi-turn history"
+    }
+  }
+}
